@@ -1,0 +1,153 @@
+import tkinter as tk
+from tkinter import messagebox
+import math
+
+# Global variables
+car_brands = ["Toyota", "Tesla", "Ford", "BMW"]
+users = {"John": "1234", "Alice": "abcd"}
+
+# Screen 1 - Welcome Screen
+def show_welcome_screen():
+    global welcome_screen
+    welcome_screen = tk.Tk()
+    welcome_screen.title("Car Application - Welcome")
+    welcome_screen.geometry("400x300")
+    
+    welcome_label = tk.Label(welcome_screen, text="Welcome to the Car Application", font=("Helvetica", 16))
+    welcome_label.pack(pady=20)
+    
+    login_button = tk.Button(welcome_screen, text="Login", command=show_login_screen)
+    login_button.pack(pady=5)
+    
+    register_button = tk.Button(welcome_screen, text="Register", command=show_register_screen)
+    register_button.pack(pady=5)
+    
+    car_details_button = tk.Button(welcome_screen, text="View Car Details", command=show_car_details_screen)
+    car_details_button.pack(pady=5)
+
+    welcome_screen.mainloop()
+
+# Screen 2 - Login Screen
+def show_login_screen():
+    global login_screen
+    login_screen = tk.Toplevel()
+    login_screen.title("Login")
+    login_screen.geometry("300x200")
+    
+    tk.Label(login_screen, text="Username").pack()
+    username_entry = tk.Entry(login_screen)
+    username_entry.pack()
+
+    tk.Label(login_screen, text="Password").pack()
+    password_entry = tk.Entry(login_screen, show="*")
+    password_entry.pack()
+
+    login_button = tk.Button(login_screen, text="Login", command=lambda: login(username_entry.get(), password_entry.get()))
+    login_button.pack(pady=10)
+
+def login(username, password):
+    if users.get(username) == password:
+        messagebox.showinfo("Login Successful", f"Welcome, {username}!")
+        show_car_details_screen()
+    else:
+        messagebox.showerror("Login Failed", "Incorrect username or password")
+
+# Screen 3 - Register Screen
+def show_register_screen():
+    global register_screen
+    register_screen = tk.Toplevel()
+    register_screen.title("Register")
+    register_screen.geometry("300x200")
+    
+    tk.Label(register_screen, text="New Username").pack()
+    new_username_entry = tk.Entry(register_screen)
+    new_username_entry.pack()
+
+    tk.Label(register_screen, text="New Password").pack()
+    new_password_entry = tk.Entry(register_screen, show="*")
+    new_password_entry.pack()
+
+    register_button = tk.Button(register_screen, text="Register", command=lambda: register(new_username_entry.get(), new_password_entry.get()))
+    register_button.pack(pady=10)
+
+def register(username, password):
+    if username in users:
+        messagebox.showerror("Registration Failed", "Username already exists")
+    else:
+        users[username] = password
+        messagebox.showinfo("Registration Successful", "Account created successfully")
+
+# Screen 4 - Car Details Screen
+def show_car_details_screen():
+    global car_screen
+    car_screen = tk.Toplevel()
+    car_screen.title("Car Details")
+    car_screen.geometry("400x300")
+
+    tk.Label(car_screen, text="Select Car Brand").pack()
+    car_brand_var = tk.StringVar()
+    car_brand_var.set(car_brands[0])
+    car_brand_menu = tk.OptionMenu(car_screen, car_brand_var, *car_brands)
+    car_brand_menu.pack()
+
+    def show_car_info():
+        car_brand = car_brand_var.get()
+        car_info_label.config(text=f"Brand: {car_brand}\nTop Speed: {car_speeds.get(car_brand)} km/h\nBattery: {car_battery.get(car_brand)} kWh")
+
+    car_info_button = tk.Button(car_screen, text="Show Car Info", command=show_car_info)
+    car_info_button.pack(pady=10)
+
+    car_info_label = tk.Label(car_screen, text="", font=("Helvetica", 12))
+    car_info_label.pack()
+
+# Dictionaries to store car information
+car_speeds = {
+    "Toyota": 180,
+    "Tesla": 250,
+    "Ford": 200,
+    "BMW": 240
+}
+
+car_battery = {
+    "Toyota": 50,
+    "Tesla": 75,
+    "Ford": 65,
+    "BMW": 70
+}
+
+# Math module example
+def calculate_circle_area(radius):
+    try:
+        area = math.pi * (radius ** 2)
+        return area
+    except TypeError:
+        return "Invalid input for radius"
+
+# Display the circle area for given radius
+def show_circle_area_screen():
+    global circle_area_screen
+    circle_area_screen = tk.Toplevel()
+    circle_area_screen.title("Circle Area Calculation")
+    circle_area_screen.geometry("300x200")
+
+    tk.Label(circle_area_screen, text="Enter radius:").pack()
+    radius_entry = tk.Entry(circle_area_screen)
+    radius_entry.pack()
+
+    def calculate_area():
+        try:
+            radius = float(radius_entry.get())
+            area = calculate_circle_area(radius)
+            area_label.config(text=f"Area of Circle: {area:.2f}")
+        except ValueError:
+            area_label.config(text="Please enter a valid number")
+
+    calculate_button = tk.Button(circle_area_screen, text="Calculate Area", command=calculate_area)
+    calculate_button.pack(pady=10)
+
+    area_label = tk.Label(circle_area_screen, text="")
+    area_label.pack()
+
+# Start the Application
+if __name__ == "__main__":
+    show_welcome_screen()
